@@ -1,9 +1,12 @@
 Package: urdn
 Version: 0.0.0.9000
-Title: What the Package Does (One Line, Title Case)
-Description: What the package does (one paragraph).
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-License: What license is it under?
+Title: Upscaling River Drainage Networks
+Description: Upscaling River Drainage Networks.
+Authors@R: person("Jonatan", "Tatsch", email = "jdtatsch@gmail.com", role = c("aut", "cre"))
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+NeedsCompilation: yes
 ByteCompile: true
+Imports: raster
+RoxygenNote: 6.0.1
