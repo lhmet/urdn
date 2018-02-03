@@ -1,5 +1,5 @@
 Package: urdn
-Version: 0.0.0.9000
+Version: 0.0.1
 Title: Upscaling River Drainage Networks
 Description: Upscaling River Drainage Networks.
 Authors@R: person("Jonatan", "Tatsch", email = "jdtatsch@gmail.com", role = c("aut", "cre"))
