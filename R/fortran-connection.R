@@ -4,8 +4,8 @@
 #' improved algorithm known as Cell Outlet Tracing with an Area Threshold
 #' (COTAT+).
 #'
-#' @param dirh fine resolution flow direction raster.
-#' @param areah fine resolution drainage area raster.
+#' @param flowdir.fres fine resolution flow direction raster.
+#' @param draina.fres fine resolution drainage area raster.
 #' @param factor integer. Aggregation factor expressed as number of cells in
 #' each direction (horizontally and vertically). For example, fact=10 will result
 #' in a new Raster* object with 10*10=100 times fewer cells.
@@ -22,8 +22,8 @@
 #' @examples
 #'area_hres
 #'dir_hres
-#'upscaling_out<- cotat_plus(dirh = dir_hres,
-#'                                areah = area_hres,
+#'upscaling_out<- cotat_plus(flowdire.fres = dir_hres,
+#'                                draina.fres = area_hres,
 #'                                factor = 10,
 #'                                area.thres = 1.0,
 #'                                mufp = 0.02)
@@ -35,8 +35,8 @@
 #'flow_dir <- raster(upscaling_out[[2]], 1)
 #'flow_dir
 
-cotat_plus <- function(dirh,
-                       areah,
+cotat_plus <- function(flowdir.fres,
+                       draina.fres,
                        factor,
                        area.thres,
                        mufp,
@@ -56,15 +56,15 @@ cotat_plus <- function(dirh,
   # }
   # #on.exit(dyn.unload(lib))
 
-  nrowh <- nrow(dirh)
-  ncolh <- ncol(dirh)
+  nrowh <- nrow(flowdir.fres)
+  ncolh <- ncol(flowdir.fres)
 
   if (!(nrowh %% factor == 0 & ncolh %% factor == 0)) {
     stop("high-resolution is not divisible by factor.")
   }
 
   nptsh <- nrowh * ncolh
-  resh <- raster::xres(dirh)
+  resh <- raster::xres(flowdir.fres)
 
   # Set low-resolution dimensions and parameters
   nrowl <- nrowh %/% factor
@@ -85,7 +85,7 @@ cotat_plus <- function(dirh,
 
   # Load/create mask file
   if (missing(mascfile)) {
-    masc <- raster::aggregate(dirh, factor)
+    masc <- raster::aggregate(flowdir.fres, factor)
     masc <- raster::setValues(masc, rep.int(0L, nptsl))
   } else {
     masc <- raster::raster(mascfile)
@@ -99,8 +99,8 @@ cotat_plus <- function(dirh,
     "fluxdir",
     as.integer(nrowh),
     as.integer(ncolh),
-    as.integer(raster::getValues(dirh)),
-    as.single(raster::getValues(areah)),
+    as.integer(raster::getValues(flowdir.fres)),
+    as.single(raster::getValues(draina.fres)),
     outletm = integer(nptsh),
     as.integer(nrowl),
     as.integer(ncoll),
@@ -116,7 +116,7 @@ cotat_plus <- function(dirh,
   )
 
   # Set output objects
-  outlet <- raster::raster(dirh)
+  outlet <- raster::raster(flowdir.fres)
   dirl <- raster::raster(masc)
   outrow <- raster::raster(masc)
   outcol <- raster::raster(masc)
