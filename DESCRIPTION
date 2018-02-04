@@ -2,11 +2,18 @@ Package: urdn
 Version: 0.0.1
 Title: Upscaling River Drainage Networks
 Description: Upscaling River Drainage Networks.
-Authors@R: person("Jonatan", "Tatsch", email = "jdtatsch@gmail.com", role = c("aut", "cre"))
+Authors@R: c(
+    person("Jonatan", "Tatsch", email = "jdtatsch@gmail.com", role = c("aut", "cre")),
+    person("Nelson", "Navarrete", role = "aut"),
+    person("Adriano", "Paz", role = "ctb"))
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/lhmet/urdn
+RdMacros: Rdpack
 NeedsCompilation: yes
 ByteCompile: true
-Imports: raster
+Imports: 
+    raster,
+    Rdpack
 RoxygenNote: 6.0.1
