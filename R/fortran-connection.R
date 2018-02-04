@@ -2,7 +2,7 @@
 #'
 #' Upscaling flow direction from fine- to coarse‐resolution grid using the
 #' improved algorithm known as Cell Outlet Tracing with an Area Threshold
-#' (COTAT+).
+#' (COTAT+) (Paz).
 #'
 #' @param flowdir.fres fine resolution flow direction raster.
 #' @param draina.fres fine resolution drainage area raster.
@@ -12,7 +12,8 @@
 #' @param area.thres area threshold (set equal to the cell area).
 #' @param mufp minimum upstream flow path (set as one fifth of the cell size).
 #' @param mascfile mask file
-#'
+#' @author Jonatan Tatsch
+#' @author Nelson Navarrete
 #' @return List object with 2 elements:
 ##'  \describe{
 ##'   \item{hires}{RasterLayer with location of cells outlet}
@@ -20,6 +21,12 @@
 ##'   }
 ##' @references
 ##' \insertRef{Paz2006}{urdn}
+##'
+##' \insertRef{Saraiva2014}{urdn}
+##'
+##'@source Fotran source code provided by Dr.
+##'Adriano Paz (\url{https://sites.google.com/site/adrianorpaz2})
+##'
 #' @export
 #' @examples
 #'area_hres

@@ -3,17 +3,20 @@
 \name{cotat_plus}
 \alias{cotat_plus}
 \title{Upscaling river drainage network}
+\source{
+
+}
 \usage{
-cotat_plus(dirh, areah, factor, area.thres, mufp, mascfile = "")
+cotat_plus(flowdir.fres, draina.fres, factor, area.thres, mufp, mascfile = "")
 }
 \arguments{
-\item{dirh}{high resolution flow direction grid.}
+\item{flowdir.fres}{fine resolution flow direction raster.}
 
-\item{areah}{high resolution drainage area grid.}
+\item{draina.fres}{fine resolution drainage area raster.}
 
 \item{factor}{integer. Aggregation factor expressed as number of cells in
-each direction (horizontally and vertically). For example, fact=2 will result
-in a new Raster* object with 2*2=4 times fewer cells.}
+each direction (horizontally and vertically). For example, fact=10 will result
+in a new Raster* object with 10*10=100 times fewer cells.}
 
 \item{area.thres}{area threshold (set equal to the cell area).}
 
@@ -22,28 +25,40 @@ in a new Raster* object with 2*2=4 times fewer cells.}
 \item{mascfile}{mask file}
 }
 \value{
-list object with 2 elements:
+List object with 2 elements:
  \describe{
   \item{hires}{RasterLayer with location of cells outlet}
-  \item{lowres}{RasterStack with flow direction, outlet row, and outlet col}
+  \item{lowres}{RasterStack with flow direction, outlet row, and outlet column.}
   }
 }
 \description{
-Upscaling flow direction from fine- to coarse‐resolution river networks
+Upscaling flow direction from fine- to coarse‐resolution grid using the
+improved algorithm known as Cell Outlet Tracing with an Area Threshold
+(COTAT+) (Paz).
 }
 \examples{
 area_hres
 dir_hres
-flowd_coarse_grid <- cotat_plus(dirh = dir_hres,
-                               areah = area_hres,
+upscaling_out<- cotat_plus(flowdire.fres = dir_hres,
+                               draina.fres = area_hres,
                                factor = 10,
                                area.thres = 1.0,
                                mufp = 0.02)
 # outlet locations (high resolution)
-flowd_coarse_grid[[1]]
+upscaling_out[[1]]
 # flow direction, outlet row, outlet col
-flowd_coarse_grid[[2]]
-plot(flowd_coarse_grid[[2]])
-flow_dir <- raster(flowd_coarse_grid[[2]], 1)
+upscaling_out[[2]]
+plot(upscaling_out[[2]])
+flow_dir <- raster(upscaling_out[[2]], 1)
 flow_dir
+}
+\references{
+\insertRef{Paz2006}{urdn}
+
+\insertRef{Saraiva2014}{urdn}
+}
+\author{
+Jonatan Tatsch
+
+Nelson Navarrete
 }
