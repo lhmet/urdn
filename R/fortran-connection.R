@@ -33,7 +33,7 @@
 #' @examples
 #'area_hres
 #'dir_hres
-#'upscaling_out<- cotat_plus(flowdire.fres = dir_hres,
+#'upscaling_out<- cotat_plus(flowdir.fres = dir_hres,
 #'                                draina.fres = area_hres,
 #'                                factor = 10,
 #'                                area.thres = 1.0,
