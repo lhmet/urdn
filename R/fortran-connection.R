@@ -18,6 +18,8 @@
 ##'   \item{hires}{RasterLayer with location of cells outlet}
 ##'   \item{lowres}{RasterStack with flow direction, outlet row, and outlet column.}
 ##'   }
+##' @references
+##' \insertRef{Paz2006}{urdn}
 #' @export
 #' @examples
 #'area_hres
