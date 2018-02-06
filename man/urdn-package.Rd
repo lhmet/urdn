@@ -16,6 +16,7 @@ The only function you're likely to need from \pkg{urdn} is
 Useful links:
 \itemize{
   \item \url{https://github.com/lhmet/urdn}
+  \item Report bugs at \url{https://github.com/lhmet/urdn/issues}
 }
 
 }
