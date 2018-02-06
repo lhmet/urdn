@@ -10,6 +10,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/lhmet/urdn
+BugReports: https://github.com/lhmet/urdn/issues
 RdMacros: Rdpack
 NeedsCompilation: yes
 ByteCompile: true
