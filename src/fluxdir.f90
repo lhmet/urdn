@@ -16,34 +16,34 @@ subroutine fluxdir(nlinpix, ncolpix, dirh, areah, outlet, &
 !
 ! Considerando: grade de BAIXA resolucao = celulas
 !               grade de ALTA resolucao = pixels
-!     
+!
 !
 ! (i) O algoritmo identifica em cada celula o pixel exutorio, definido como aquele que drena
 ! a maior area de drenagem dentre todos os pixels contidos na celula, desde que atenda
 ! a outro criterio: o fluxo principal do escoamento a montante dele, dentro da celula, deve
-! apresentar um comprimento minimo. Se nao satisfaz este ultimo criterio, avalia se ele eh o 
+! apresentar um comprimento minimo. Se nao satisfaz este ultimo criterio, avalia se ele eh o
 ! pixel que drena a maior parte da celula; se for, eh aceito como pixel exutorio, caso contrario
 ! procura o seguinte em termos de area de drenagem acumulada para ser testado e assim por diante.
 ! (ii) Para cada celula, percorre-se o caminho do fluxo desde o pixel exutorio ateh encontrar
 ! o pixel exutorio de uma celula vizinha. Entao eh checado o incremento de area de drenagem e,
-! se for superior ao minimo estabelecido, define-se a direcao da celula analisada. Se nao, 
+! se for superior ao minimo estabelecido, define-se a direcao da celula analisada. Se nao,
 ! continua o percurso..
 ! (iii) Existem diversas situacoes especiais: ver artigos ou o codigo...
 !
 !
-! Arquivos de entrada: 
+! Arquivos de entrada:
 ! * arquivo com direcoes de fluxo de ALTA resolucao
 ! * arquivo com areas de drenagem acumuladas de ALTA resolucao (em km2)
 ! * (opcional) mascara da regiao de mar de BAIXA resolucao
 !
 !
-! IMPORTANTE: 
+! IMPORTANTE:
 
 ! 1. O parametro LIMITEINC define a area de drenagem incremental minima para estabelecimento
 ! das direcoes de fluxo. Para celulas de 10 km x 10 km e pixels de cerca de 200 m, o valor de
 ! 100 km2 para esse parametro foi o mais indicado.
 !
-! 2. O parametro LIMITECAM define o tamanho do caminho minimo a montante do pixel testado 
+! 2. O parametro LIMITECAM define o tamanho do caminho minimo a montante do pixel testado
 ! para que ele seja aceito como pixel exutorio. Valor indicado para esse parametro, considerando
 ! pixels em torno de 200 m e celulas de 10 km, eh de 1 a 2 km.
 !
@@ -79,7 +79,7 @@ integer, intent(out) :: outrow(ncolcel,nlincel)
 integer, intent(out) :: outcol(ncolcel,nlincel)
 
 ! Local variables
-integer :: i, j
+integer :: i, j, k
 
 
 
@@ -112,12 +112,12 @@ real :: areaaux(plin * pcol)
 
 
 
-!!!character(len=5) :: texto1,texto2   
-!!!character(len=9) :: texto3,texto4  
-!!!character(len=8) :: texto5          
-!!!character(len=12) :: texto6        
-!!!integer :: pixnul   
-!!!real :: coordxie,coordyie,respix,rescel     
+!!!character(len=5) :: texto1,texto2
+!!!character(len=9) :: texto3,texto4
+!!!character(len=8) :: texto5
+!!!character(len=12) :: texto6
+!!!integer :: pixnul
+!!!real :: coordxie,coordyie,respix,rescel
 !!!integer*2,allocatable:: dirpix(:,:),exu(:,:)   ! Flux direction and oulet grids
 !!!real,allocatable:: aacpix(:,:)   ! Accumulated area grid
 !!!character (len=40) :: texto7
@@ -125,7 +125,7 @@ real :: areaaux(plin * pcol)
 
 !!!integer :: ncolpix,nlinpix
 !!!integer :: nlincel,ncolcel
-!!!integer :: plin,pcol     
+!!!integer :: plin,pcol
 integer :: lincel, colcel, fim
 !!!integer*2,allocatable:: dircel(:,:),marcel(:,:),vizmarcel(:,:),histocel(:,:),histo(:,:)
 !!!integer*2,allocatable:: marcacel(:,:)
@@ -208,7 +208,7 @@ end do
 
 
 
-!! CABECALHO DO PROGRAMA 
+!! CABECALHO DO PROGRAMA
 
 !!!write(*,*)
 !!!write(*,*)
@@ -227,14 +227,14 @@ end do
 !!!write(*,*) "-  1.DirBaixa.rst  (dir. de fluxo de baixa resol./int/bin/IDRISI)  -"
 !!!write(*,*) "-  2.PixelExu.dat  (matriz ascii com lin/col dos pixels exutorios) -"
 !!!write(*,*) "-  3.PixelExu.rst  (raster alta res. 1(pixel exut.)/0 int/bin/IDR) -"
-!!!write(*,*) "-                                                                  -" 
-!!!write(*,*) "- @@@@ algoritmo descrito em Paz et al(2005) c/ base em Reed(2003) -"                                                     
+!!!write(*,*) "-                                                                  -"
+!!!write(*,*) "- @@@@ algoritmo descrito em Paz et al(2005) c/ base em Reed(2003) -"
 !!!write(*,*) "-                                                                  -"
 !!!write(*,*) "- @@@@@ contato: Adriano Rolim da Paz - adrianorpaz@yahoo.com.br   -"
-!!!write(*,*) "-                Instituto de Pesquisas Hidraulicas (IPH/UFRGS)    -" 
-!!!write(*,*) "-                                                                  -" 
-!!!write(*,*) "- @@@@@@ versao: JULHO/2006                                        -" 
-!!!write(*,*) "- @@@@@@ versao p/ distribuicao internet: ABR/2008                 -" 
+!!!write(*,*) "-                Instituto de Pesquisas Hidraulicas (IPH/UFRGS)    -"
+!!!write(*,*) "-                                                                  -"
+!!!write(*,*) "- @@@@@@ versao: JULHO/2006                                        -"
+!!!write(*,*) "- @@@@@@ versao p/ distribuicao internet: ABR/2008                 -"
 !!!write(*,*) "--------------------------------------------------------------------"
 !!!write(*,*) "(tecle enter)"
 !!!read(*,*)
@@ -264,7 +264,7 @@ end do
 
 !ATENCAO PARA O VALOR NUMERICO DAS DIRECOES
 
-!   G  H  A          ArcView:  32 64 128    MGB-IPH:  64  128  1 
+!   G  H  A          ArcView:  32 64 128    MGB-IPH:  64  128  1
 !   F  *  B                    16  *  1               32   *   2
 !   E  D  C                     8  4  2               16   8   4
 
@@ -386,7 +386,7 @@ vizmarcel=0
 
 !!!if (RespMar==1) then
 	! leitura do arquivo contendo mascara que diferencia continente do mar - arquivo binario/inteiro
-	!(mesmo numero de linhas e colunas (mesma resolucao) do arquivo de BAIXA resolucao do MNT, 
+	!(mesmo numero de linhas e colunas (mesma resolucao) do arquivo de BAIXA resolucao do MNT,
 	! sendo valor 0 para regiao de mar e 1 para continente)
 !!!	open(21,file='Mascara.rst',status='old',form='unformatted',access='direct',RECL=2*ncolcel)
 !!!	do lincel=1,nlincel
@@ -418,7 +418,7 @@ vizmarcel=0
 
 !limite minimo do CAMINHO DE MONTANTE para definir pixel exutorio (EM KM)!!!
 !!!write(*,*) "Informe caminho minimo de montante (em km)"
-!!!write(*,*) "valor usual entre 1 e 2 km" 
+!!!write(*,*) "valor usual entre 1 e 2 km"
 !!!read(*,*) LimiteCamkm
 !!!LimiteCamR=LimiteCamkm/100.0/respalta
 !!!LimiteCam=int(LimiteCamR)
@@ -435,14 +435,14 @@ vizmarcel=0
 
 
 !definicao da numeracao das direcoes
-A=1   
-B=2   
-C=4   
-D=8   
-E=16  
-F=32  
-G=64  
-H=128 
+A=1
+B=2
+C=4
+D=8
+E=16
+F=32
+G=64
+H=128
 
 
 
@@ -500,7 +500,7 @@ colpixex=1
 foraviz=0
 
 colpixini=1
-colpixfin=pcol    
+colpixfin=pcol
 linpixini=1
 linpixfin=plin
 
@@ -532,7 +532,8 @@ do while (fim==0)
   passo2=0
   exut=0
   AreaAux=0
-	write(*,*) lincel,colcel
+!JDT comment
+!write(*,*) lincel,colcel
   if (marcel(lincel,colcel)==0) then
   do while (passo2==0)
 
@@ -569,7 +570,7 @@ do while (fim==0)
    				   linexu=linpix
 				   colexu=colpix
 				   exut=1
-				 end if	 
+				 end if
 			   end if
 			end if
 		  end do
@@ -600,12 +601,12 @@ do while (fim==0)
 						dc=colpix-colaux2
 						dd=dirpix(linpix,colpix)
 						invaux=inv(dd)
-						do i=1,8					 
-						  if (invaux==ddaux(i)) then			   
-							if ((dlin(invaux)==dl).AND.(dcol(invaux)==dc)) then					     
-							  MaiorArea=aacpix(linpix,colpix)					
+						do i=1,8
+						  if (invaux==ddaux(i)) then
+							if ((dlin(invaux)==dl).AND.(dcol(invaux)==dc)) then
+							  MaiorArea=aacpix(linpix,colpix)
 							  linaux=linpix
-							  colaux=colpix								  
+							  colaux=colpix
 							end if
 						  end if
 						end do
@@ -619,7 +620,7 @@ do while (fim==0)
 		  AreaJus=MaiorArea
 		  linaux3=linaux2
 		  colaux3=colaux2
-		  
+
 		  !verifica se pixel de montante pertence a mesma celula
 		  !    (linha)
 		  if (linaux<=plin) then
@@ -665,7 +666,7 @@ do while (fim==0)
 		  passo2=1      !pixel escolhido pela area atendeu ao criterio do caminho
 		else
 		  !pixel escolhido pela area NAO atendeu ao criterio do caminho
-          
+
 		  !vai ser analisado o HISTOGRAMA -> ver se o pixel testado eh o que drena o maior
 		  !numero de pixels da celula (sim -> eh aceito; nao -> eh rejeitado)
 
@@ -729,7 +730,7 @@ do while (fim==0)
 				end do !(fim do while caminho)
 			  end do
 			end do
-    
+
 			!loop pelos pixels da celula para ver qual drena a maior parte
 			histomax=0
 			do colpix=colpixini,colpixfin
@@ -741,7 +742,7 @@ do while (fim==0)
 				end if
 			  end do
 			end do
-    
+
 	        !checa se o pixel testado para exutorio eh o escolhido pelo histograma
 			!sim -> vai ser o pixel exutorio
 			!nao -> vai ser rejeitado
@@ -767,9 +768,9 @@ do while (fim==0)
 
   end if !(fim if marcel=0)
 
-     
+
   ! move a janela formada por plin x pcol pixels
-  ! (vai para a proxima celula)	 
+  ! (vai para a proxima celula)
   if (colpixfin==ncolpix) then
     linpixini=linpixfin+1
 	linpixfin=linpixfin+plin
@@ -826,23 +827,24 @@ end do
 !
 do lincel=1,nlincel
   do colcel=1,ncolcel
-    write(*,*) lincel,colcel
+!JDT comment
+!   write(*,*) lincel,colcel
     if ((marcel(lincel,colcel)==0).AND.(vizmarcel(lincel,colcel)==0)) then
 		caminho=0
 		linexu=linpixex(lincel,colcel)
 		colexu=colpixex(lincel,colcel)
 		dd=dirpix(linexu,colexu)
-		!checa se a celula drena diretamente para fora da regiao estudada e atribui direcao 
+		!checa se a celula drena diretamente para fora da regiao estudada e atribui direcao
 		! para fora da regiao
 		!(checa a posicao e direcao do pixel exutorio)
-		if (linexu==nlinpix) then 
+		if (linexu==nlinpix) then
 		  if (colexu==ncolpix) then
 			dircel(lincel,colcel)=B
 			caminho=1
 		  else
 			if (colexu==1) then
 			  dircel(lincel,colcel)=F
-			  caminho=1	
+			  caminho=1
 			else
 			  if ((dd==C).OR.(dd==D).OR.(dd==E).OR.(dd==H)) then
 				dircel(lincel,colcel)=D
@@ -851,13 +853,13 @@ do lincel=1,nlincel
 			end if
 		  end if
 		end if
-		if (linexu==1) then 
+		if (linexu==1) then
 		  if (colexu==ncolpix) then
 			dircel(lincel,colcel)=B
-		  else  	  
+		  else
 			if (colexu==1) then
 			  dircel(lincel,colcel)=F
-			  caminho=1				
+			  caminho=1
 			else
 			  if ((dd==A).OR.(dd==D).OR.(dd==G).OR.(dd==H)) then
 				dircel(lincel,colcel)=H
@@ -866,15 +868,15 @@ do lincel=1,nlincel
 			end if
 		  end if
 		end if
-		if (colexu==ncolpix) then 
-		  if ((linexu/=nlinpix).AND.(linexu/=1)) then	    
+		if (colexu==ncolpix) then
+		  if ((linexu/=nlinpix).AND.(linexu/=1)) then
 			if ((dd==A).OR.(dd==B).OR.(dd==C).OR.(dd==F)) then
 			  dircel(lincel,colcel)=B
 			  caminho=1
 			end if
 		  end if
 		end if
-		if (colexu==1) then 
+		if (colexu==1) then
 		  if ((linexu/=nlinpix).AND.(linexu/=1)) then
 			if ((dd==B).OR.(dd==E).OR.(dd==F).OR.(dd==G)) then
 			  dircel(lincel,colcel)=F
@@ -889,7 +891,7 @@ do lincel=1,nlincel
 		colaux=colexu
 
 		! celula nao drena diretamente para fora da regiao estudada e
-		! a busca vai ser iniciada ateh que [(area drenada pelo pixel exutorio encontrado) - (area 
+		! a busca vai ser iniciada ateh que [(area drenada pelo pixel exutorio encontrado) - (area
 		! drenada pixel exutorio cel inicial)] seja maior que um valor especificado
 		do while (caminho==0)
 		  diraux=dirpix(linaux,colaux)
@@ -901,8 +903,8 @@ do lincel=1,nlincel
 			  linaux=linaux+dlin(dd)
 			  colaux=colaux+dcol(dd)
 			end if
-		  end do	
-  
+		  end do
+
 		 !identifica a qual celula o pixel encontrado pertence
 		 !    (linha)
 		 if (linaux<=plin) then
@@ -928,12 +930,12 @@ do lincel=1,nlincel
 			 colcelaux=int(auxc)
 		   end if
 		 end if
-		 
-    
+
+
 		 !verifica se saiu para alem das 8 celulas vizinhas
-		 ! (entao a direcao nao serah alterada, permanecendo (i) a referente ao ultimo 
+		 ! (entao a direcao nao serah alterada, permanecendo (i) a referente ao ultimo
 		 ! pixel exutorio encontrado, caso tenha sido encontrado algum ou (ii) a direcao
-		 ! relativa a celula pela qual o caminho saiu da vizinhanca) 
+		 ! relativa a celula pela qual o caminho saiu da vizinhanca)
 		 if ((lincelaux>lincel+1).OR.(colcelaux>colcel+1)) then
 		   foraviz=1
 		   caminho=1
@@ -943,8 +945,8 @@ do lincel=1,nlincel
 		   caminho=1
 		 end if
 		 ! caso em que saiu sem passar por nenhum pixel exutorio
-		 if ((foraviz==1).AND.(exut==0)) then  
-		       
+		 if ((foraviz==1).AND.(exut==0)) then
+
 			!direcao atribuida em funcao de por onde o caminho saiu da viz
 			 if (lincelaux>lincel+1) then  !(saiu por baixo da viz...)
 			   if (colcelaux<=colcel-1) then !(e esquerda)
@@ -992,10 +994,10 @@ do lincel=1,nlincel
 			 end if
 		  end if
 		  ! caso em que saiu MAS passou por algum pixel exutorio
-		  if ((foraviz==1).AND.(exut==1)) then    
+		  if ((foraviz==1).AND.(exut==1)) then
 			dircel(lincel,colcel)=dircel(lincel,colcel)
 		  end if
-     
+
 
 		 !verifica se saiu para fora da regiao de estudo
 		 if ((linaux<1).OR.(linaux>nlinpix)) then
@@ -1006,7 +1008,7 @@ do lincel=1,nlincel
 		   else
 			 dircel(lincel,colcel)=dircel(lincel,colcel)
 		   end if
-		 end if 
+		 end if
 		 if ((colaux<1).OR.(colaux>ncolpix)) then
 		   foraviz=1
 		   caminho=1
@@ -1015,11 +1017,11 @@ do lincel=1,nlincel
 		   else
 			 dircel(lincel,colcel)=dircel(lincel,colcel)
 		   end if
-		 end if 
+		 end if
 
 
 
-		 !caso nao tenha saido da vizinhanca nem da regiao de estudo, verifica se o pixel eh 
+		 !caso nao tenha saido da vizinhanca nem da regiao de estudo, verifica se o pixel eh
 		 !exutorio e checa criterio da area, atribuindo a direcao em caso de atendimento
 		 if (foraviz==0)then
 		   !verifica se o pixel eh exutorio da celula
@@ -1027,7 +1029,7 @@ do lincel=1,nlincel
 			 if (colaux==colpixex(lincelaux,colcelaux)) then  !eh exutorio!
 				 exut=1
 			   !verifica area de drenagem incremental
-				 AreaInc=aacpix(linaux,colaux)-aacpix(linexu,colexu)		    
+				 AreaInc=aacpix(linaux,colaux)-aacpix(linexu,colexu)
 				 if (AreaInc>LimiteInc) then
 				   caminho=1
 				 end if
@@ -1065,7 +1067,7 @@ do lincel=1,nlincel
 				   if (deltalin==1) then
 					 dircel(lincel,colcel)=E
 				   end if
-				 end if             
+				 end if
 			 end if
 		   end if
 		 end if
@@ -1080,17 +1082,17 @@ end do
 
 
 !>>>>>>>>>>>>>>>>>>> VERIFICACAO E CORRECAO DE CRUZAMENTOS NAS DIRECOES DE FLUXO >>>>>>>>>>>>
-
-write(*,*) "4. verificacao e correcao de 'cruzamentos'..."
+!JDT comment
+!write(*,*) "4. verificacao e correcao de 'cruzamentos'..."
 
 !janela 2 x 2 celulas
 !    | dircelSE  dircelSD |
 !    | dircelIE  dircelID |
-!     
+!
 cruzamento=0
 correcao=0
 do while (correcao==0)   !soh termina quando nao houver nenhuma correcao no mesmo loop
-  do lincel=1,nlincel-1   
+  do lincel=1,nlincel-1
     do colcel=1,ncolcel-1
       if ((marcel(lincel,colcel)==0).AND.(vizmarcel(lincel,colcel)==0)) then
 
@@ -1146,7 +1148,8 @@ do while (correcao==0)   !soh termina quando nao houver nenhuma correcao no mesm
 		 end if !(fim if marcel and vizmarcel)
 		end do
 	   end do
-	  write(*,*) cruzamento
+!JDT commented
+!	  write(*,*) cruzamento
 	  if (cruzamento==0) then
 		correcao=1
 	  else
@@ -1205,7 +1208,7 @@ end do
 !!!write(*,*) "PixelExu.RST - (int/bin) - imagem ALTA resolucao indicando pixels exutorios"
 
 
-    
+
 ! escrita de arquivo de direcoes - arquivo binario/inteiro
 !!!open(60,file='DIRBAIXA.rst',status='unknown',form='unformatted',access='direct',RECL=2*ncolcel)
 !!!do lincel=1,nlincel
@@ -1265,6 +1268,17 @@ do j = 1, nlincel
       outcol(i,j) = colpixex(j,i)
    end do
 end do
+
+
+!JDT To test read/write parameters from files
+!open(unit = 51, file = "input.txt", status = "old")
+!read(51, *) k
+!close(unit = 51, status = "keep")
+
+!open(unit = 51, file = "flowdirlowres.txt", status = "unknown")
+!write(51, *) "Fim da rodada.", k
+!close(unit = 51, status = "keep")
+
 
 end subroutine fluxdir
 
