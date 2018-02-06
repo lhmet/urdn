@@ -14,6 +14,6 @@ RdMacros: Rdpack
 NeedsCompilation: yes
 ByteCompile: true
 Imports: 
-    raster,
-    Rdpack
+    raster (>= 2.6.7),
+    Rdpack (>= 0.5.3)
 RoxygenNote: 6.0.1
