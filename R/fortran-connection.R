@@ -14,6 +14,7 @@
 #' @param mascfile mask file
 #' @author Jonatan Tatsch
 #' @author Nelson Navarrete
+#' @useDynLib urdn, .registration = TRUE
 #' @return List object with 2 elements:
 ##'  \describe{
 ##'   \item{hires}{RasterLayer with location of cells outlet}
