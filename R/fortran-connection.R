@@ -4,13 +4,16 @@
 #' improved algorithm known as Cell Outlet Tracing with an Area Threshold
 #' (COTAT+) (Paz et al. 2006).
 #'
-#' @param flowdir.fres fine resolution flow direction raster.
-#' @param draina.fres fine resolution drainage area raster.
+#' @param flowdir.fres fine resolution flow direction raster (integer).
+#' @param draina.fres fine resolution drainage area raster (km^2^).
 #' @param factor integer. Aggregation factor expressed as number of cells in
 #' each direction (horizontally and vertically). For example, fact=10 will result
 #' in a new Raster* object with 10*10=100 times fewer cells.
-#' @param area.thres area threshold (set equal to the cell area).
+#' @param area.thres area threshold parameter (if missing, set equal to the cell area).
+#' The increase of AT tends to produce more diagonal flow directions.
 #' @param mufp minimum upstream flow path (set as one fifth of the cell size).
+#' This parameter prevents rivers passing very shortly through the cell from being
+#' taken into account for determining their flow direction.
 #' @param mascfile mask file
 #' @author Jonatan Tatsch
 #' @author Nelson Navarrete
@@ -36,10 +39,8 @@
 #'area_hres
 #'dir_hres
 #'upscaling_out<- cotat_plus(flowdir.fres = dir_hres,
-#'                                draina.fres = area_hres,
-#'                                factor = 10,
-#'                                area.thres = 1.0,
-#'                                mufp = 0.02)
+#'                           draina.fres = area_hres,
+#'                           factor = 10)
 #'# outlet locations (high resolution)
 #'upscaling_out[[1]]
 #'# flow direction, outlet row, outlet col
@@ -55,6 +56,8 @@ cotat_plus <- function(flowdir.fres,
                        mufp,
                        mascfile = "") {
 
+  flowdir.fres[is.na(flowdir.fres)] <- -9999
+  draina.fres[is.na(draina.fres)] <- -9999
   # # TO TEST
   # # if lib does not exist, create it
   # if (!file.exists("src/fluxdir.so") |
@@ -84,15 +87,17 @@ cotat_plus <- function(flowdir.fres,
   ncoll <- ncolh %/% factor
   nptsl <- nrowl * ncoll
   resl <- factor * resh
-  reshd <- resh / 1e5
+  #reshd <- resh / 1e5
 
   if (missing(area.thres)) {
     # default value
-    area.thres <- resl / 1000.0
+    area.thres <- resl / 1000.0 # conversion to Km
   }
   if (missing(mufp)) {
     # default value
-    mufp <- (resh / 1000.0) / 5.0
+    #mufp <- resh / 1000.0 #conversion to Km
+    mufp <- resl / 1000.0 #conversion to Km
+    mufp <-  mufp/ 5.0 #  1/5 * cell side grid (km)
   }
   pathlim <- floor(mufp / 100.0 / resh)
 

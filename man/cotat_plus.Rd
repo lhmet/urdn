@@ -11,17 +11,20 @@ Adriano Paz (\url{https://sites.google.com/site/adrianorpaz2})
 cotat_plus(flowdir.fres, draina.fres, factor, area.thres, mufp, mascfile = "")
 }
 \arguments{
-\item{flowdir.fres}{fine resolution flow direction raster.}
+\item{flowdir.fres}{fine resolution flow direction raster (integer).}
 
-\item{draina.fres}{fine resolution drainage area raster.}
+\item{draina.fres}{fine resolution drainage area raster (km^2^).}
 
 \item{factor}{integer. Aggregation factor expressed as number of cells in
 each direction (horizontally and vertically). For example, fact=10 will result
 in a new Raster* object with 10*10=100 times fewer cells.}
 
-\item{area.thres}{area threshold (set equal to the cell area).}
+\item{area.thres}{area threshold parameter (if missing, set equal to the cell area).
+The increase of AT tends to produce more diagonal flow directions.}
 
-\item{mufp}{minimum upstream flow path (set as one fifth of the cell size).}
+\item{mufp}{minimum upstream flow path (set as one fifth of the cell size).
+This parameter prevents rivers passing very shortly through the cell from being
+taken into account for determining their flow direction.}
 
 \item{mascfile}{mask file}
 }
@@ -41,10 +44,8 @@ improved algorithm known as Cell Outlet Tracing with an Area Threshold
 area_hres
 dir_hres
 upscaling_out<- cotat_plus(flowdir.fres = dir_hres,
-                               draina.fres = area_hres,
-                               factor = 10,
-                               area.thres = 1.0,
-                               mufp = 0.02)
+                          draina.fres = area_hres,
+                          factor = 10)
 # outlet locations (high resolution)
 upscaling_out[[1]]
 # flow direction, outlet row, outlet col
